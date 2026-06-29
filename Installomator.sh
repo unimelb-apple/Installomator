@@ -349,7 +349,7 @@ if [[ $(/usr/bin/arch) == "arm64" ]]; then
     fi
 fi
 VERSION="10.9beta"
-VERSIONDATE="2026-06-27"
+VERSIONDATE="2026-06-29"
 
 # MARK: Functions
 
@@ -2706,13 +2706,6 @@ bbedit)
     appNewVersion=$(curl -s https://versioncheck.barebones.com/BBEdit.xml | grep dmg | sort  | tail -n1 | sed -E 's/.*BBEdit_([0-9 .]*)\.dmg.*/\1/')
     expectedTeamID="W52GZAXT98"
     ;;
-bbeditpkg)
-    name="BBEdit"
-    type="pkg"
-    downloadURL=$(curl -s https://versioncheck.barebones.com/BBEdit.xml | grep dmg | sort | tail -n1 | cut -d">" -f2 | cut -d"<" -f1 | sed 's/dmg/pkg/')
-    appNewVersion=$(curl -s https://versioncheck.barebones.com/BBEdit.xml | grep dmg | sort  | tail -n1 | sed -E 's/.*BBEdit_([0-9 .]*)\.dmg.*/\1/')
-    expectedTeamID="W52GZAXT98"
-    ;;
 beamstudio)
     name="Beam Studio"
     type="dmg"
@@ -5061,60 +5054,6 @@ firecutforpremierepro)
     expectedTeamID="7ASRSVAEMS"
     blockingProcesses=( "Adobe Premiere Pro 2024" "Adobe Premiere Pro 2025" "Adobe Premiere Pro 2026" "Adobe Premiere Pro 2027" )
     ;;
-firefox_da)
-    name="Firefox"
-    type="dmg"
-    downloadURL="https://download.mozilla.org/?product=firefox-latest&amp;os=osx&amp;lang=da"
-    firefoxVersions=$(curl -fs "https://product-details.mozilla.org/1.0/firefox_versions.json")
-    appNewVersion=$(getJSONValue "$firefoxVersions" "LATEST_FIREFOX_VERSION")
-    expectedTeamID="43AQ936H96"
-    blockingProcesses=( firefox )
-    printlog "WARNING for ERROR: Label firefox, firefox_da and firefox_intl should not be used. Instead use firefoxpkg and firefoxpkg_intl as per recommendations from Firefox. It's not fully certain that the app actually gets updated here. firefoxpkg and firefoxpkg_intl will have built in updates and make sure the client is updated in the future." REQ
-    ;;
-firefox_intl)
-    # This label will try to figure out the selected language of the user,
-    # and install corrosponding version of Firefox
-    name="Firefox"
-    type="dmg"
-    userLanguage=$(runAsUser defaults read .GlobalPreferences AppleLocale | tr '_' '-')
-    printlog "Found language $userLanguage to be used for $name."
-    releaseURL="https://ftp.mozilla.org/pub/firefox/releases/latest/README.txt"
-    until curl -fs $releaseURL | grep -q "=$userLanguage"; do
-        if [ ${#userLanguage} -eq 2 ]; then
-            break
-        fi
-        printlog "No locale matching '$userLanguage', trying '${userLanguage:0:2}'"
-        userLanguage=${userLanguage:0:2}
-    done
-    printlog "Using language '$userLanguage' for download."
-    downloadURL="https://download.mozilla.org/?product=firefox-latest-ssl&os=osx&lang=$userLanguage"
-    if ! curl -sfL --output /dev/null -r 0-0 $downloadURL; then
-        printlog "Download not found for '$userLanguage', using default ('en-US')."
-        downloadURL="https://download.mozilla.org/?product=firefox-latest-ssl&os=osx"
-    fi
-    firefoxVersions=$(curl -fs "https://product-details.mozilla.org/1.0/firefox_versions.json")
-    appNewVersion=$(getJSONValue "$firefoxVersions" "LATEST_FIREFOX_VERSION")
-    expectedTeamID="43AQ936H96"
-    blockingProcesses=( firefox )
-    printlog "WARNING for ERROR: Label firefox and firefox_intl should not be used. Instead use firefoxpkg and firefoxpkg_intl as per recommendations from Firefox. It's not fully certain that the app actually gets updated here. firefoxpkg and firefoxpkg_intl will have built in updates and make sure the client is updated in the future." REQ
-    ;;
-firefox)
-    name="Firefox"
-    type="dmg"
-    downloadURL="https://download.mozilla.org/?product=firefox-latest&os=osx&lang=en-US"
-    firefoxVersions=$(curl -fs "https://product-details.mozilla.org/1.0/firefox_versions.json")
-    appNewVersion=$(getJSONValue "$firefoxVersions" "LATEST_FIREFOX_VERSION")
-    expectedTeamID="43AQ936H96"
-    blockingProcesses=( firefox )
-    printlog "WARNING for ERROR: Label firefox and firefox_intl should not be used. Instead use firefoxpkg and firefoxpkg_intl as per recommendations from Firefox. It's not fully certain that the app actually gets updated here. firefoxpkg and firefoxpkg_intl will have built in updates and make sure the client is updated in the future." REQ
-    ;;
-firefoxdeveloperedition)
-    name="Firefox Developer Edition"
-    type="dmg"
-    downloadURL="https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US"
-    appNewVersion=$(curl -fsIL "https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US&_gl=1*1g4sufp*_ga*OTAwNTc3MjE4LjE2NTM2MDIwODM.*_ga_MQ7767QQQW*MTY1NDcyNTYyNy40LjEuMTY1NDcyNzA2MS4w" | grep -i ^location | cut -d "/" -f7)
-    expectedTeamID="43AQ936H96"
-    ;;
 firefoxesr|\
 firefoxesrpkg)
     name="Firefox"
@@ -5124,70 +5063,6 @@ firefoxesrpkg)
     appNewVersion=$(getJSONValue "$firefoxVersions" "FIREFOX_ESR")
     appNewVersion=${appNewVersion:0:-3}
     expectedTeamID="43AQ936H96"
-    ;;
-firefoxesrintl|\
-firefoxesrpkgintl)
-    # This label will try to figure out the selected language of the user,
-    # and install corrosponding version of Firefox ESR
-    name="Firefox"
-    type="pkg"
-    userLanguage=$(runAsUser defaults read .GlobalPreferences AppleLocale | tr '_' '-')
-    printlog "Found language $userLanguage to be used for $name."
-    releaseURL="https://ftp.mozilla.org/pub/firefox/releases/latest-esr/README.txt"
-    until curl -fs $releaseURL | grep -q "=$userLanguage"; do
-        if [ ${#userLanguage} -eq 2 ]; then
-            break
-        fi
-        printlog "No locale matching '$userLanguage', trying '${userLanguage:0:2}'"
-        userLanguage=${userLanguage:0:2}
-    done
-    printlog "Using language '$userLanguage' for download."
-    downloadURL="https://download.mozilla.org/?product=firefox-esr-pkg-latest-ssl&os=osx&lang=$userLanguage"
-    if ! curl -sfL --output /dev/null -r 0-0 $downloadURL; then
-        printlog "Download not found for '$userLanguage', using default ('en-US')."
-        downloadURL="https://download.mozilla.org/?product=firefox-esr-pkg-latest-ssl&os=osx"
-    fi
-    firefoxVersions=$(curl -fs "https://product-details.mozilla.org/1.0/firefox_versions.json")
-    appNewVersion=$(getJSONValue "$firefoxVersions" "FIREFOX_ESR")
-    appNewVersion=${appNewVersion:0:-3}
-    expectedTeamID="43AQ936H96"
-    ;;
-firefoxpkg_intl)
-    # This label will try to figure out the selected language of the user,
-    # and install corrosponding version of Firefox ESR
-    name="Firefox"
-    type="pkg"
-    userLanguage=$(runAsUser defaults read .GlobalPreferences AppleLocale | tr '_' '-' | cut -f1 -d"@")
-    # userLanguage="sv-SE" #for tests without international language setup
-    printlog "Found language $userLanguage to be used for Firefox." WARN
-    releaseURL="https://ftp.mozilla.org/pub/firefox/releases/latest/README.txt"
-    until curl -fs $releaseURL | grep -q "=$userLanguage"; do
-        if [ ${#userLanguage} -eq 2 ]; then
-            break
-        fi
-        printlog "No locale matching '$userLanguage', trying '${userLanguage:0:2}'"
-        userLanguage=${userLanguage:0:2}
-    done
-    printlog "Using language $userLanguage for download." WARN
-    downloadURL="https://download.mozilla.org/?product=firefox-pkg-latest-ssl&os=osx&lang=$userLanguage"
-    # https://download.mozilla.org/?product=firefox-pkg-latest-ssl&os=osx&lang=en-US
-    if ! curl -sfL --output /dev/null -r 0-0 "$downloadURL" ; then
-        printlog "Download not found for that language. Using en-US" WARN
-        downloadURL="https://download.mozilla.org/?product=firefox-pkg-latest-ssl&os=osx&lang=en-US"
-    fi
-    firefoxVersions=$(curl -fs "https://product-details.mozilla.org/1.0/firefox_versions.json")
-    appNewVersion=$(getJSONValue "$firefoxVersions" "LATEST_FIREFOX_VERSION")
-    expectedTeamID="43AQ936H96"
-    blockingProcesses=( firefox )
-    ;;
-firefoxpkg)
-    name="Firefox"
-    type="pkg"
-    downloadURL="https://download.mozilla.org/?product=firefox-pkg-latest-ssl&os=osx&lang=en-US"
-    firefoxVersions=$(curl -fs "https://product-details.mozilla.org/1.0/firefox_versions.json")
-    appNewVersion=$(getJSONValue "$firefoxVersions" "LATEST_FIREFOX_VERSION")
-    expectedTeamID="43AQ936H96"
-    blockingProcesses=( firefox )
     ;;
 flexoptixapp)
     name="FLEXOPTIX App"
@@ -5554,24 +5429,6 @@ googleadseditor)
     appNewVersion="$(curl -s "https://support.google.com/google-ads/editor/topic/13728" | grep -Eo 'Google Ads Editor version [0-9]+(\.[0-9]+)*' | head -1 | grep -Eo '[0-9]+(\.[0-9]+)*')"
     appCustomVersion(){cat /Applications/Google\ Ads\ Editor.app/Contents/Versions/*/Google\ Ads\ Editor.app/Contents/locale/content/welcome1/welcome1-en-US.htm | grep -o -E " about version.{0,4}" | tail -c 4}
     expectedTeamID="EQHXZ8M8AV"
-    ;;
-googlechrome)
-    name="Google Chrome"
-    type="dmg"
-    downloadURL="https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg"
-    appNewVersion=$(getJSONValue "$(curl -s "https://chromiumdash.appspot.com/fetch_releases?platform=Mac&channel=Stable&num=1")" "[0].version")
-    expectedTeamID="EQHXZ8M8AV"
-    printlog "WARNING for ERROR: Label googlechrome should not be used. Instead use googlechromepkg as per recommendations from Google. It's not fully certain that the app actually gets updated here. googlechromepkg will have built in updates and make sure the client is updated in the future." REQ
-    ;;
-googlechromeenterprise)
-    name="Google Chrome"
-    type="pkg"
-    downloadURL="https://dl.google.com/dl/chrome/mac/universal/stable/gcem/GoogleChrome.pkg"
-    appNewVersion=$(getJSONValue "$(curl -fsL "https://versionhistory.googleapis.com/v1/chrome/platforms/mac/channels/stable/versions/all/releases?filter=fraction>0.01,endtime=none&order_by=version%20desc" )" "releases[0].version" )
-    expectedTeamID="EQHXZ8M8AV"
-    updateTool="/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/GoogleSoftwareUpdateAgent.app/Contents/MacOS/GoogleSoftwareUpdateAgent"
-    updateToolArguments=( -runMode oneshot -userInitiated YES )
-    updateToolRunAsCurrentUser=1
     ;;
 googlechromepkg)
     name="Google Chrome"
@@ -6230,99 +6087,6 @@ jabradirect)
     #appNewVersion=$(curl -fs https://www.jabra.com/Support/release-notes/release-note-jabra-direct | grep -oe "Release version:.*[0-9.]*<" | head -1 | cut -d ">" -f2 | cut -d "<" -f1 | sed 's/ //g')
     appNewVersion=$(curl -fs "https://jabraexpressonlinejdo.jabra.com/jdo/jdo.json" | grep -i MacVersion | cut -d '"' -f4)
     expectedTeamID="55LV32M29R"
-    ;;
-jamfcheck)
-    name="jamfcheck"
-    type="dmg"
-    downloadURL="$(downloadURLFromGit txhaflaire JamfCheck)"
-    appNewVersion="$(versionFromGit txhaflaire JamfCheck)"
-    expectedTeamID="CLQKFNPCCP"
-    ;;
-jamfcli|\
-jamf-cli)
-    name="jamf-cli"
-    type="pkg"
-    downloadURL="$( downloadURLFromGit Jamf-Concepts jamf-cli )"
-    appNewVersion="$( versionFromGit Jamf-Concept jamf-cli )"
-    expectedTeamID="483DWKW443"
-    appName="jamf-cli"
-    appCustomVersion() { /usr/local/bin/jamf-cli --version | head -n1 | awk '{ print \$2 }' }
-    ;;
-jamfconnect)
-    name="Jamf Connect"
-    type="pkgInDmg"
-    packageID="com.jamf.connect"
-    downloadURL="https://files.jamfconnect.com/JamfConnect.dmg"
-    appNewVersion=$(curl -fsIL "${downloadURL}" | grep "x-amz-meta-version" | grep -o "[0-9.].*[0-9.].*[0-9]")
-    expectedTeamID="483DWKW443"
-    ;;
-jamfconnectconfiguration)
-    name="Jamf Connect Configuration"
-    type="dmg"
-    downloadURL="https://files.jamfconnect.com/JamfConnect.dmg"
-    appNewVersion=$(curl -fsIL "${downloadURL}" | grep "x-amz-meta-version" | grep -o "[0-9.].*[0-9.].*[0-9]")
-    expectedTeamID="483DWKW443"
-    ;;
-jamfconnectlaunchagent)
-    name="Jamf Connect Launch Agent"
-    type="pkgInDmg"
-    pkgName="JamfConnectLaunchAgent.pkg"
-    downloadURL="https://files.jamfconnect.com/JamfConnect.dmg"
-    appNewVersion=$(curl -fsIL "${downloadURL}" | grep "x-amz-meta-version" | grep -o "[0-9.].*[0-9.].*[0-9]")
-    expectedTeamID="483DWKW443"
-    ;;
-jamfconnectlogin)
-    name="Jamf Connect Login"
-    type="pkgInDmg"
-    pkgName="JamfConnectLogin.pkg"
-    packageID="com.jamf.connect.login"
-    downloadURL="https://files.jamfconnect.com/JamfConnect.dmg"
-    appNewVersion=$(curl -fsIL "${downloadURL}" | grep "x-amz-meta-version" | grep -o "[0-9.].*[0-9.].*[0-9]")
-    expectedTeamID="483DWKW443"
-    ;;
-jamfcpr)
-    name="jamfcpr"
-    type="zip"
-    downloadURL="$(downloadURLFromGit BIG-RAT jamfcpr)"
-    appNewVersion="$(versionFromGit BIG-RAT jamfcpr)"
-    expectedTeamID="PS2F6S478M"
-    ;;
-jamfmigrator)
-    name="jamf-migrator"
-    type="zip"
-    downloadURL=$(downloadURLFromGit jamf JamfMigrator)
-    appNewVersion=$(versionFromGit jamf JamfMigrator)
-    expectedTeamID="PS2F6S478M"
-    ;;
-jamfpppcutility)
-    # credit: Mischa van der Bent
-    name="PPPC Utility"
-    type="zip"
-    downloadURL=$(downloadURLFromGit jamf PPPC-Utility)
-    appNewVersion=$(versionFromGit jamf PPPC-Utility)
-    expectedTeamID="483DWKW443"
-    ;;
-jamfprintermanager)
-    name="Jamf Printer Manager"
-    type="zip"
-    downloadURL="$(downloadURLFromGit jamf jamf-printer-manager)"
-    appNewVersion="$(versionFromGit jamf jamf-printer-manager)"
-    expectedTeamID="483DWKW443"
-    ;;
-jamfreenroller)
-    # credit: Mischa van der Bent
-    name="ReEnroller"
-    type="zip"
-    downloadURL=$(downloadURLFromGit jamf ReEnroller)
-    #appNewVersion=$(versionFromGit jamf ReEnroller)
-    expectedTeamID="PS2F6S478M"
-    ;;
-jamfsetupmanager)
-    name="Setup Manager"
-    type="pkg"
-    downloadURL=$(downloadURLFromGit jamf Setup-Manager)
-    appNewVersion=$(versionFromGit jamf Setup-Manager)
-    expectedTeamID="483DWKW443"
     ;;
 jamovi)
     name="jamovi"
@@ -7884,22 +7648,6 @@ microsoftonenotereset)
     downloadURL="https://office-reset.com"$(curl -fs https://office-reset.com/macadmins/ | grep -o -i "href.*\".*\"*OneNote_Reset.*.pkg" | cut -d '"' -f2)
     expectedTeamID="QGS93ZLCU7"
     ;;
-microsoftoutlook-monthly)
-    name="Microsoft Outlook"
-    # As macadmin.software has provided a link to a monthly edition of Outlook, I have created this label.
-    # Not sure about the requirements for this label, nor if the call to msupdate should be there or not.
-    type="pkg"
-    downloadURL="https://go.microsoft.com/fwlink/?linkid=2228510"
-    #appNewVersion=$(curl -fs https://macadmins.software/latest.xml | xpath '//latest/package[id="com.microsoft.outlook.standalone.365"]/cfbundleshortversionstring' 2>/dev/null | sed -E 's/<cfbundleshortversionstring>([0-9.]*)<.*/\1/')
-    appNewVersion=$(curl -fsIL "$downloadURL" | grep -i location: | grep -o "/Microsoft_.*pkg" | cut -d "_" -f 3 | cut -d "." -f 1-2)
-    expectedTeamID="UBF8T346G9"
-    if [[ -x "/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate" && $INSTALL != "force" && $DEBUG -eq 0 ]]; then
-        printlog "Running msupdate --list"
-        "/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate" --list
-    fi
-    updateTool="/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate"
-    updateToolArguments=( --install --apps OPIM2019 )
-    ;;
 microsoftoutlook)
     name="Microsoft Outlook"
     type="pkg"
@@ -8002,41 +7750,6 @@ microsoftskypeforbusinessremovaltool)
     packageID="com.microsoft.remove.SkypeForBusiness"
     downloadURL="https://office-reset.com"$(curl -fs https://office-reset.com/macadmins/ | grep -o -i "href.*\".*\"*SkypeForBusiness_Removal.*.pkg" | cut -d '"' -f2)
     expectedTeamID="QGS93ZLCU7"
-    ;;
-microsoftteams-rollingout)
-    name="Microsoft Teams"
-    type="pkg"
-    packageID="com.microsoft.teams2"
-    # Fetch the latest version number from the Microsoft documentation page
-    appNewVersion=$(curl -s https://learn.microsoft.com/en-us/officeupdates/teams-app-versioning | awk '/<h4 id="mac">Mac<\/h4>/,/<\/table>/' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
-    downloadURL="https://statics.teams.cdn.office.net/production-osx/${appNewVersion}/MicrosoftTeams.pkg"
-    expectedTeamID="UBF8T346G9"
-    blockingProcesses=( Teams MSTeams "Microsoft Teams" "Microsoft Teams WebView" "Microsoft Teams WebView Helper" "Microsoft Teams Launcher" "Microsoft Teams (work preview)" "Microsoft Teams classic Helper" "com.microsoft.teams2.respawn")
-    # msupdate requires a PPPC profile pushed out from Jamf to work, https://github.com/pbowden-msft/MobileConfigs/tree/master/Jamf-MSUpdate
-    if [[ -x "/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate" && $INSTALL != "force" && $DEBUG -eq 0 ]]; then
-        printlog "Running msupdate --list"
-        "/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate" --list
-    fi
-    updateTool="/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate"
-    updateToolArguments=( --install --apps TEAMS21 ) # --wait 600
-    ;;
-microsoftteamsclassic|\
-microsoftteams)
-    name="Microsoft Teams classic"
-    type="pkg"
-    #packageID="com.microsoft.teams"
-    downloadURL="https://go.microsoft.com/fwlink/?linkid=869428"
-    appNewVersion=$(curl -fsIL "${downloadURL}" | grep -i "^location" | tail -1 | cut -d "/" -f5)
-    versionKey="CFBundleGetInfoString"
-    expectedTeamID="UBF8T346G9"
-    blockingProcesses=( Teams "Microsoft Teams classic Helper" )
-    # msupdate requires a PPPC profile pushed out from Jamf to work, https://github.com/pbowden-msft/MobileConfigs/tree/master/Jamf-MSUpdate
-    if [[ -x "/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate" && $INSTALL != "force" && $DEBUG -eq 0 ]]; then
-        printlog "Running msupdate --list"
-        "/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate" --list
-    fi
-    updateTool="/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate"
-    updateToolArguments=( --install --apps TEAMS10 ) # --wait 600 #TEAM01
     ;;
 microsoftteamsnew)
     name="Microsoft Teams"
@@ -8623,14 +8336,6 @@ npssantafull)
     downloadURL=$(downloadURLFromGit northpolesec santa)
     appNewVersion=$(versionFromGit northpolesec santa)
     expectedTeamID="ZMCG7MLDV9"
-    ;;
-nudge)
-    name="Nudge"
-    type="pkg"
-    archiveName="Nudge-[0-9.]*.pkg"
-    downloadURL=$(downloadURLFromGit macadmins Nudge )
-    appNewVersion=$(versionFromGit macadmins Nudge )
-    expectedTeamID="T4SK8ZXCXG"
     ;;
 nudgesuite)
     name="Nudge Suite"
@@ -9965,14 +9670,6 @@ santa)
     appNewVersion=$(versionFromGit google santa)
     expectedTeamID="EQHXZ8M8AV"
     ;;
-keyaccess)
-    name="KeyAccess"
-    type="pkg"
-    downloadURL="https://download.sassafras.com/software/release/current/Installers/MacOS/Client/ksp-client.pkg"
-    appNewVersion="$(curl -s "https://solutions.teamdynamix.com/TDClient/1965/Portal/KB/ArticleDet?ID=169236" | grep -Eo '[0-9]+\.[0-9]+(\.[0-9]+)+' | sort -V | tail -1)"
-    expectedTeamID="7Z2KSDFMVY"
-    appName="Library/KeyAccess/KeyAccess.app"
-    ;;
 sawgrassprintutility)
     name="Sawgrass Print Utility"
     type="dmg"
@@ -11097,17 +10794,6 @@ teamviewerqs)
     appNewVersion=$(getJSONValue "$(curl -fsL https://www.teamviewer.com/en/solutions/use-cases/quicksupport/ | grep .dmg |  grep -o 'data-json="[^"]*"' | sed 's/data-json="//;s/"$//' | sed 's/&quot;/"/g' )" "data[0].versionNumber")
     expectedTeamID="H7UGFBUGV6"
     ;;
-teamviewerqscustom)
-    name="TeamViewerQS"
-    type="zip"
-    teamviewerCustomDownloadURL="" # https://get.teamviewer.com/your_custom_name_here
-    teamviewerConfigID=$(curl -fs ${teamviewerCustomDownloadURL} -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36' | grep -o 'var configId = ".*"' | awk -F'"' '{ print $2 }')
-    teamviewerVersion=$(curl -fs ${teamviewerCustomDownloadURL} -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36' | grep -o 'var version = ".*"' | awk -F'"' '{ print $2 }')
-    downloadURL=$(curl -fs -X POST --url "https://get.teamviewer.com/api/CustomDesign" --header 'Content-Type: application/json; charset=utf-8' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36' --data '{ "ConfigId": "'"$teamviewerConfigID"'", "Version": "'"$teamviewerVersion"'", "IsCustomModule": true, "Subdomain": "1", "ConnectionId": "" }' | tr -d '"')
-    appNewVersion=$(curl -fs "https://www.teamviewer.com/en/download/macos/" | grep "Current version" | awk -F': ' '{ print $2 }' | sed 's/<[^>]*>//g')
-    appName="TeamViewerQS.app"
-    expectedTeamID="H7UGFBUGV6"
-    ;;
 teamwire)
     name="Teamwire"
     type="dmg"
@@ -11329,62 +11015,6 @@ tom4aconverter)
      appNewVersion=$(curl -sf "https://amvidia.com/to-m4a-converter" | grep -o -E '"softwareVersion":.'"{8}" | sed 's/\"//g' | awk -F ': ' '{print $2}')
      expectedTeamID="F2TH9XX9CJ"
      ;;
-toonboomharmonypremium2024)
-    name="Harmony 24 Premium"
-    type="dmg"
-    # appNewVersion=$(curl -s https://docs.toonboom.com/help/harmony-24/premium/release-notes/harmony/harmony-24-release-notes.html | grep -oE 'build [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | awk '{print $2}')
-    appNewVersion=$(release_notes_url=$(curl -s "https://docs.toonboom.com/help/harmony-24/premium/book/index.html" | \
-    grep -o 'href="[^"]*release-notes/harmony/harmony-24[^"]*"' | \
-    head -n 1 | sed -E 's/href="([^"]*)"/\1/')
-    curl -s "https://docs.toonboom.com/help/harmony-24/premium/book/$release_notes_url" | \
-    grep -oE 'Harmony [0-9]+\.[0-9]+\.[0-9]+, build [0-9]+' | \
-    sed 's/,//g' | awk '{print $2 "." $4}')
-    version=$(echo "$appNewVersion" | awk -F'.' '{print $1"."$2"."$3}')
-    build=$(echo "$appNewVersion" | awk -F'.' '{print $4}')
-    downloadURL="https://fileshare.toonboom.com/wl/?id=idRIztLvVCq0EZ00x01BJa6R2EqKp01R&path=${version}%2FHAR24-PRM-mac-${build}.dmg&mode=list&download=1"
-    folderName="Toon Boom Harmony 24 Premium"
-    appName="${folderName}/Harmony 24 Premium.app"
-    versionKey="CFBundleVersion"
-    expectedTeamID="U5LPYJSPQ3"
-    ;;
-    
-toonboomharmonypremium2025)
-    name="Harmony 25 Premium"
-    type="dmg"
-    version=$(curl -s "https://fileshare.toonboom.com/wl/?id=jyhyaYQFJ86iE6daFDh3JJv2g6OFBDza" | grep -oE '25\.[0-9]+\.[0-9]+' | sort -V | tail -1)
-    build=$(curl -s "https://docs.toonboom.com/help/harmony-25/premium/release-notes/harmony/harmony-25-release-notes.html" | grep -iEo 'build[^0-9]*([0-9]{4,6})' | grep -oE '[0-9]{4,6}')
-    appNewVersion=${version}${build}
-    downloadURL="https://fileshare.toonboom.com/wl/?id=jyhyaYQFJ86iE6daFDh3JJv2g6OFBDza&path=${version}%2FHAR25-PRM-mac-${build}.dmg&mode=list&download=1"
-    folderName="Toon Boom Harmony 25 Premium"
-    appName="${folderName}/Harmony 25 Premium.app"
-    versionKey="CFBundleVersion"
-    expectedTeamID="U5LPYJSPQ3"
-    ;;
-
-toonboomstoryboardpro2024)
-    name="Storyboard Pro 24"
-    type="dmg"
-    downloadURL=$(curl -s "https://updates.toonboom.com/updates.php?p=sboardPro&v=24.0.0&b=00000" | sed -n 's/.*<package platform="macos" open_in_browser="false">\([^<]*\).*/\1/p')
-    folderName="Toon Boom Storyboard Pro 24"
-    appName="${folderName}/Storyboard Pro 24.app"
-    appNewVersion=$(curl -s "https://updates.toonboom.com/updates.php?p=sboardPro&v=24.0.0&b=00000" | xmllint --xpath 'string(//update/@version)' -)
-    versionKey="CFBundleVersion"
-    expectedTeamID="U5LPYJSPQ3"
-    ;;
-    
-toonboomstoryboardpro2025)
-    name="Storyboard Pro 25"
-    type="dmg"
-    version=$(curl -s "https://fileshare.toonboom.com/wl/?id=gXDIzUJu4BznZHs9e15WxLJdooDPu6ii" | grep -oE '25\.[0-9]+\.[0-9]+' | sort -V | tail -1)
-    build=$(curl -s "https://docs.toonboom.com/help/storyboard-pro-25/storyboard/release-notes/storyboard-pro-25-release-notes.html" | grep -iEo 'build[^0-9]*([0-9]{4,6})' | grep -oE '[0-9]{4,6}')
-    appNewVersion=(${version}.${build})
-    downloadURL="https://fileshare.toonboom.com/wl/?id=gXDIzUJu4BznZHs9e15WxLJdooDPu6ii&path=${version}%2FSBP25-mac-${build}.dmg&mode=list&download=1"
-    folderName="Toon Boom Storyboard Pro 25"
-    appName="${folderName}/Storyboard Pro 25.app"
-    versionKey="CFBundleVersion"
-    expectedTeamID="U5LPYJSPQ3"
-    ;;
-
 topazgigapixel|\
 topazgigapixelai)
     name="Topaz Gigapixel AI"
@@ -12441,28 +12071,6 @@ zoom)
     name="zoom.us"
     type="pkg"
     downloadURL="https://zoom.us/client/latest/ZoomInstallerIT.pkg"
-    appNewVersion="$(curl -fsIL ${downloadURL} | grep -i ^location | cut -d "/" -f5)"
-    expectedTeamID="BJ4HAAB9B3"
-    versionKey="CFBundleVersion"
-    ;;
-zoomclient)
-    name="zoom.us"
-    type="pkg"
-    packageID="us.zoom.pkg.videomeeting"
-    if [[ $(arch) == i386 ]]; then
-       downloadURL="https://zoom.us/client/latest/Zoom.pkg"
-    elif [[ $(arch) == arm64 ]]; then
-       downloadURL="https://zoom.us/client/latest/Zoom.pkg?archType=arm64"
-    fi
-    expectedTeamID="BJ4HAAB9B3"
-    #appNewVersion=$(curl -is "https://beta2.communitypatch.com/jamf/v1/ba1efae22ae74a9eb4e915c31fef5dd2/patch/zoom.us" | grep currentVersion | tr ',' '\n' | grep currentVersion | cut -d '"' -f 4) # Does not match packageID
-    blockingProcesses=( zoom.us )
-    #blockingProcessesMaxCPU="5"
-    ;;
-zoomgov)
-    name="zoom.us"
-    type="pkg"
-    downloadURL="https://www.zoomgov.com/client/latest/ZoomInstallerIT.pkg"
     appNewVersion="$(curl -fsIL ${downloadURL} | grep -i ^location | cut -d "/" -f5)"
     expectedTeamID="BJ4HAAB9B3"
     versionKey="CFBundleVersion"

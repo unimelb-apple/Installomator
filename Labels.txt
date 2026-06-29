@@ -113,7 +113,6 @@ baseline
 baseline-nodaemon
 basictex
 bbedit
-bbeditpkg
 beamstudio
 beekeeperstudio
 betterdisplay
@@ -366,16 +365,8 @@ finaldraft13
 findanyfile
 firecutfordavinciresolve
 firecutforpremierepro
-firefox
-firefox_da
-firefox_intl
-firefoxdeveloperedition
 firefoxesr
-firefoxesrintl
 firefoxesrpkg
-firefoxesrpkgintl
-firefoxpkg
-firefoxpkg_intl
 flexoptixapp
 flowjo
 flstudiomac
@@ -416,8 +407,6 @@ godot
 goland
 golang
 googleadseditor
-googlechrome
-googlechromeenterprise
 googlechromepkg
 googledrive
 googledrivebackupandsync
@@ -498,19 +487,6 @@ iterm2
 itsycal
 izotopeproductportal
 jabradirect
-jamf-cli
-jamfcheck
-jamfcli
-jamfconnect
-jamfconnectconfiguration
-jamfconnectlaunchagent
-jamfconnectlogin
-jamfcpr
-jamfmigrator
-jamfpppcutility
-jamfprintermanager
-jamfreenroller
-jamfsetupmanager
 jamovi
 jasp
 jcpswdmgr
@@ -547,7 +523,6 @@ keepassxc
 keeperpasswordmanager
 keepingyouawake
 keka
-keyaccess
 keybase
 keyboardmaestro
 keyshot
@@ -665,7 +640,6 @@ microsoftonedrivesuprod
 microsoftonenote
 microsoftonenotereset
 microsoftoutlook
-microsoftoutlook-monthly
 microsoftoutlookdataremoval
 microsoftoutlookreset
 microsoftpowerpoint
@@ -676,9 +650,6 @@ microsoftremotehelp
 microsoftsharepointplugin
 microsoftskypeforbusiness
 microsoftskypeforbusinessremovaltool
-microsoftteams
-microsoftteams-rollingout
-microsoftteamsclassic
 microsoftteamsnew
 microsoftteamsreset
 microsoftvisualstudiocode
@@ -745,7 +716,6 @@ notioncalendar
 nova
 nps-santa
 npssantafull
-nudge
 nudgesuite
 numi
 nvivo
@@ -1036,7 +1006,6 @@ teamviewer
 teamviewerhost
 teamviewerhostcustom
 teamviewerqs
-teamviewerqscustom
 teamwire
 techsmithaudiate
 techsmithcapture
@@ -1061,10 +1030,6 @@ tidal
 todoist
 toggltrack
 tom4aconverter
-toonboomharmonypremium2024
-toonboomharmonypremium2025
-toonboomstoryboardpro2024
-toonboomstoryboardpro2025
 topazgigapixel
 topazgigapixelai
 topazphoto
@@ -1192,8 +1157,6 @@ zohoworkdrive
 zohoworkdrivegenie
 zohoworkdrivetruesync
 zoom
-zoomclient
-zoomgov
 zoomoutlookplugin
 zoomoutlookpluginremoval
 zoompresence
