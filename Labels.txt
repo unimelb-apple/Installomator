@@ -631,12 +631,7 @@ microsoftofficebusinesspro
 microsoftofficefactoryreset
 microsoftofficeremoval
 microsoftonedrive
-microsoftonedrive-deferred
-microsoftonedrive-rollingout
-microsoftonedrive-rollingoutdeferred
 microsoftonedrivereset
-microsoftonedrivesuinsiders
-microsoftonedrivesuprod
 microsoftonenote
 microsoftonenotereset
 microsoftoutlook
