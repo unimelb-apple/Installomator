@@ -352,7 +352,7 @@ if [[ $(/usr/bin/arch) == "arm64" ]]; then
     fi
 fi
 VERSION="10.10beta"
-VERSIONDATE="2026-07-17"
+VERSIONDATE="2026-07-31"
 
 # MARK: Functions
 
@@ -1674,6 +1674,7 @@ gephi)
     appNewVersion="$(versionFromGit gephi gephi)"
     downloadURL="$(downloadURLFromGit gephi gephi)"
     expectedTeamID="3D8H75J8UL"
+    SYSTEMOWNER=1
     ;;
 googlechromepkg)
     name="Google Chrome"
@@ -1789,6 +1790,7 @@ microsoftpowerpoint)
     versionKey="CFBundleVersion"
     blockingProcesses=( "Microsoft PowerPoint" )
     ;;
+microsoftteams|\
 microsoftteamsnew)
     name="Microsoft Teams"
     type="pkg"
@@ -1938,6 +1940,8 @@ teamviewerqs)
     downloadURL="https://download.teamviewer.com/download/TeamViewerQS.dmg"
     appNewVersion=$(getJSONValue "$(curl -fsL https://www.teamviewer.com/en/solutions/use-cases/quicksupport/ | grep .dmg |  grep -o 'data-json="[^"]*"' | sed 's/data-json="//;s/"$//' | sed 's/&quot;/"/g' )" "data[0].versionNumber")
     expectedTeamID="H7UGFBUGV6"
+    targetDir="/Applications/Utilities"
+    SYSTEMOWNER=1
     ;;
 theunarchiver)
     name="The Unarchiver"

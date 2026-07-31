@@ -23,6 +23,7 @@ microsoftonenote
 microsoftoutlook
 microsoftpowerpoint
 microsoftremotedesktop
+microsoftteams
 microsoftteamsnew
 microsoftvisualstudiocode
 microsoftwindowsapp
