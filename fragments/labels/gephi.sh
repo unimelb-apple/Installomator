@@ -10,4 +10,5 @@ gephi)
     appNewVersion="$(versionFromGit gephi gephi)"
     downloadURL="$(downloadURLFromGit gephi gephi)"
     expectedTeamID="3D8H75J8UL"
+    SYSTEMOWNER=1
     ;;
