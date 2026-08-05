@@ -352,7 +352,7 @@ if [[ $(/usr/bin/arch) == "arm64" ]]; then
     fi
 fi
 VERSION="10.10beta"
-VERSIONDATE="2026-07-31"
+VERSIONDATE="2026-08-05"
 
 # MARK: Functions
 
@@ -1563,6 +1563,7 @@ abletonlive12suite)
     downloadURL="https://cdn-downloads.ableton.com/channels/${appNewVersion}/ableton_live_suite_${appNewVersion}_universal.dmg"
     blockingProcesses=("Live")
     expectedTeamID="MWR434WD94"
+    SYSTEMOWNER=1
     ;;
 affinitydesigner2)
     name="Affinity Designer 2"
@@ -1570,6 +1571,7 @@ affinitydesigner2)
     downloadURL=$(curl -fs "https://store.serif.com/en-gb/update/macos/designer/2/" | grep -i -o -E "https.*\.dmg.*\"" | sort | tail -n1 | sed 's/.$//' | sed 's/&amp;/\&/g')
     appNewVersion=$(curl -fs "https://store.serif.com/en-gb/update/macos/designer/2/" | grep -i -o -E "https.*\.dmg" | sort | tail -n1 | tr "-" "\n" | grep dmg | sed -E 's/([0-9.]*)\.dmg/\1/g')
     expectedTeamID="6LVTQB9699"
+    SYSTEMOWNER=1
     ;;
 affinityphoto2)
     name="Affinity Photo 2"
@@ -1577,6 +1579,7 @@ affinityphoto2)
     downloadURL=$(curl -fs "https://store.serif.com/en-gb/update/macos/photo/2/" | grep -i -o -E "https.*\.dmg.*\"" | sort | tail -n1 | sed 's/.$//' | sed 's/&amp;/\&/g')
     appNewVersion=$(curl -fs "https://store.serif.com/en-gb/update/macos/photo/2/" | grep -i -o -E "https.*\.dmg" | sort | tail -n1 | tr "-" "\n" | grep dmg | sed -E 's/([0-9.]*)\.dmg/\1/g')
     expectedTeamID="6LVTQB9699"
+    SYSTEMOWNER=1
     ;;
 affinitypublisher2)
     name="Affinity Publisher 2"
@@ -1584,6 +1587,7 @@ affinitypublisher2)
     downloadURL=$(curl -fs "https://store.serif.com/en-gb/update/macos/publisher/2/" | grep -i -o -E "https.*\.dmg.*\"" | sort | tail -n1 | sed 's/.$//' | sed 's/&amp;/\&/g')
     appNewVersion=$(curl -fs "https://store.serif.com/en-gb/update/macos/publisher/2/" | grep -i -o -E "https.*\.dmg" | sort | tail -n1 | tr "-" "\n" | grep dmg | sed -E 's/([0-9.]*)\.dmg/\1/g')
     expectedTeamID="6LVTQB9699"
+    SYSTEMOWNER=1
     ;;
 audacity)
     name="Audacity"
@@ -1593,6 +1597,7 @@ audacity)
     appNewVersion=$(versionFromGit audacity audacity)
     appCustomVersion(){ defaults read "/Applications/Audacity.app/Contents/Info.plist" CFBundleVersion | cut -d '.' -f 1-3 }
     expectedTeamID="AWEYX923UX"
+    SYSTEMOWNER=1
     ;;
 bbedit)
     name="BBEdit"
@@ -1600,6 +1605,7 @@ bbedit)
     downloadURL=$(curl -s https://versioncheck.barebones.com/BBEdit.xml | grep dmg | sort | tail -n1 | cut -d">" -f2 | cut -d"<" -f1)
     appNewVersion=$(curl -s https://versioncheck.barebones.com/BBEdit.xml | grep dmg | sort  | tail -n1 | sed -E 's/.*BBEdit_([0-9 .]*)\.dmg.*/\1/')
     expectedTeamID="W52GZAXT98"
+    SYSTEMOWNER=1
     ;;
 blender)
     name="Blender"
@@ -1615,6 +1621,7 @@ blender)
         downloadURL="https://ftp.nluug.nl/pub/graphics/blender/release/Blender4.5//$archiveName"
     fi
     expectedTeamID="68UA947AUU"
+    SYSTEMOWNER=1
     ;;
 citrixworkspace)
     name="Citrix Workspace"
@@ -1661,6 +1668,7 @@ geneiousprime)
     downloadURL="https:$( curl -s "$webSite$( curl -s "$webSite/updates" | tr '<>{},:[]' "\n" | grep -E -m1 "^\"\/updates\/.*" | tr -d '"' )" | tr '<>{},:[]"' "\n" | grep -E -m1 ".*release.*dmg" )"
     appNewVersion="$( echo "$downloadURL" | tr '_' '.' | cut -d '.' -f 6-8 )"
     expectedTeamID="3BTDDQD3L6"
+    SYSTEMOWNER=1
     ;;
 gephi)
 	# An open-source software that visualizes and manipulates large graphs with ease, featuring a user-friendly interface and powerful real-time capabilities
@@ -1696,6 +1704,7 @@ handbrake)
     downloadURL=$(downloadURLFromGit HandBrake HandBrake )
     appNewVersion=$(versionFromGit HandBrake HandBrake )
     expectedTeamID="5X9DE89KYV"
+    SYSTEMOWNER=1
     ;;
 horos)
     name="Horos"
@@ -1711,6 +1720,7 @@ horos)
         appNewVersion=$(curl -fs https://horosproject.org/horos-content/ | grep -v -e "Apple" -e "arm64" -e "Nightly" | grep ".dmg" | tail -1 | sed "s|.*href=\"\(.*\)\">Horos.*|\\1|" | sed -e 's/.*Horos\(.*\).dmg.*/\1/')
     fi
     expectedTeamID="TPT6TVH8UY"
+    SYSTEMOWNER=1
     ;;
 isadora)
     name="Isadora"
@@ -1736,6 +1746,7 @@ jasp)
     appCustomVersion(){/usr/bin/defaults read "/Applications/JASP.app/Contents/Info.plist" "CFBundleVersion" | sed 's/..$//'}
     appNewVersion=$(versionFromGit jasp-stats jasp-desktop )
     expectedTeamID="AWJJ3YVK9B"
+    SYSTEMOWNER=1
     ;;
 logitechoptionsplus)
     name="Logi Options+"
@@ -1843,6 +1854,7 @@ nitropdf)
     downloadURL="https://downloads.gonitro.com/macos/Nitro%20PDF%20Pro_${appNewVersion}.dmg"    
     expectedTeamID="37C4TX3D45"
     blockingProcesses=( "Nitro PDF Pro" )
+    SYSTEMOWNER=1
     ;;
 obs)
     name="OBS"
@@ -1856,6 +1868,7 @@ obs)
     downloadURL=$(downloadURLFromGit obsproject obs-studio )
     appNewVersion=$(versionFromGit obsproject obs-studio )
     expectedTeamID="2MMRE5MTB8"
+    SYSTEMOWNER=1
     ;;
 polleverywhere)
     name="Poll Everywhere"
@@ -1864,6 +1877,7 @@ polleverywhere)
     downloadURL="https://polleverywhere-app.s3.amazonaws.com/mac-stable/$appNewVersion/pollev.dmg"
     expectedTeamID="W48F3X5M8W"
     versionKey="CFBundleVersion"
+    SYSTEMOWNER=1
     ;;
 praat)
     name="Praat"
@@ -1871,6 +1885,7 @@ praat)
     downloadURL=$(downloadURLFromGit praat praat.github.io)
     appNewVersion=$(versionFromGit praat praat.github.io)
     expectedTeamID="J9C6R9XA5W"
+    SYSTEMOWNER=1
     ;;
 processing4)
     name="Processing"
@@ -1879,6 +1894,7 @@ processing4)
     downloadURL=$(downloadURLFromGit processing processing4)
     appNewVersion="$( echo "$downloadURL" | awk -F '-' '{ print $4 }' )"
     expectedTeamID="6297K33652"
+    SYSTEMOWNER=1
     ;;
 python)
     name="Python"
@@ -1903,6 +1919,7 @@ qlab)
     downloadURL="https://qlab.app/downloads/QLab.dmg"
     appNewVersion=$(curl -fs "https://qlab.app/appcast/v5/" | xpath 'string(//rss/channel[1]/item/enclosure/@sparkle:shortVersionString)')
     expectedTeamID="7672N4CCJM"
+    SYSTEMOWNER=1
     ;;
 r)
     name="R"
@@ -1924,6 +1941,7 @@ reaper)
     downloadURL="https://www.reaper.fm/files/7.x/reaper$(echo $appNewVersion | tr -d '.')_universal.dmg"
     appCustomVersion(){ /usr/bin/defaults read "/Applications/REAPER.app/Contents/Info.plist" CFBundleShortVersionString | cut -d'.' -f1-2 }
     expectedTeamID="Y3T58622SG"
+    SYSTEMOWNER=1
     ;;
 supportapp)
     name="Support"
@@ -1949,6 +1967,7 @@ theunarchiver)
     downloadURL="https://dl.devmate.com/com.macpaw.site.theunarchiver/TheUnarchiver.dmg"
     appNewVersion="$(curl -fs "https://theunarchiver.com" | grep -i "Latest version" | head -1 | sed -E 's/.*> ([0-9.]*) .*/\1/g')"
     expectedTeamID="S8EX82NJP6"
+    SYSTEMOWNER=1
     ;;
 touchdesigner)
     name="TouchDesigner"
@@ -1961,6 +1980,7 @@ touchdesigner)
     fi
     versionKey="CFBundleShortVersionString"
     expectedTeamID="Z7MPGSMXH2"
+    SYSTEMOWNER=1
     ;;
 vlc)
     # VLC is a versatile, open-source multimedia player that supports a wide range of audio, video, and streaming formats across multiple platforms
@@ -1969,6 +1989,7 @@ vlc)
     appNewVersion=$(curl -s https://www.videolan.org/vlc/#download | xmllint --html --xpath "//script[contains(text(),'var PLATFORMS')]" - 2>/dev/null | grep -o '"osx":{"name":"macOS[^}]*' | grep -o '"latestVersion":"[^"]*' | sed 's/"latestVersion":"//')
     downloadURL="https://get.videolan.org/vlc/$appNewVersion/macosx/vlc-$appNewVersion-universal.dmg"
     expectedTeamID="75GAHG3SZQ"
+    SYSTEMOWNER=1
     ;;
 wacomdrivers)
     name="Wacom Center"
@@ -2001,6 +2022,7 @@ zotero)
     expectedTeamID="8LAYR367YV"
     appNewVersion=$(curl -fs "https://www.zotero.org/download/" | grep -Eio '"mac":"(.*)' | cut -d '"' -f 4)
     #Company="Corporation for Digital Scholarship"
+    SYSTEMOWNER=1
     ;;
 *)
     # unknown label
