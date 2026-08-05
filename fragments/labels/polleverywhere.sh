@@ -5,4 +5,5 @@ polleverywhere)
     downloadURL="https://polleverywhere-app.s3.amazonaws.com/mac-stable/$appNewVersion/pollev.dmg"
     expectedTeamID="W48F3X5M8W"
     versionKey="CFBundleVersion"
+    SYSTEMOWNER=1
     ;;

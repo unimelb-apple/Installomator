@@ -5,4 +5,5 @@ processing4)
     downloadURL=$(downloadURLFromGit processing processing4)
     appNewVersion="$( echo "$downloadURL" | awk -F '-' '{ print $4 }' )"
     expectedTeamID="6297K33652"
+    SYSTEMOWNER=1
     ;;

@@ -12,4 +12,5 @@ horos)
         appNewVersion=$(curl -fs https://horosproject.org/horos-content/ | grep -v -e "Apple" -e "arm64" -e "Nightly" | grep ".dmg" | tail -1 | sed "s|.*href=\"\(.*\)\">Horos.*|\\1|" | sed -e 's/.*Horos\(.*\).dmg.*/\1/')
     fi
     expectedTeamID="TPT6TVH8UY"
+    SYSTEMOWNER=1
     ;;

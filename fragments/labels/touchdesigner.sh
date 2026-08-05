@@ -9,4 +9,5 @@ touchdesigner)
     fi
     versionKey="CFBundleShortVersionString"
     expectedTeamID="Z7MPGSMXH2"
+    SYSTEMOWNER=1
     ;;

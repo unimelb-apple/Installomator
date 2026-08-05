@@ -12,4 +12,5 @@ blender)
         downloadURL="https://ftp.nluug.nl/pub/graphics/blender/release/Blender4.5//$archiveName"
     fi
     expectedTeamID="68UA947AUU"
+    SYSTEMOWNER=1
     ;;

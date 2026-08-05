@@ -6,4 +6,5 @@ abletonlive12suite)
     downloadURL="https://cdn-downloads.ableton.com/channels/${appNewVersion}/ableton_live_suite_${appNewVersion}_universal.dmg"
     blockingProcesses=("Live")
     expectedTeamID="MWR434WD94"
+    SYSTEMOWNER=1
     ;;

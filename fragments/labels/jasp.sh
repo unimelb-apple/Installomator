@@ -10,4 +10,5 @@ jasp)
     appCustomVersion(){/usr/bin/defaults read "/Applications/JASP.app/Contents/Info.plist" "CFBundleVersion" | sed 's/..$//'}
     appNewVersion=$(versionFromGit jasp-stats jasp-desktop )
     expectedTeamID="AWJJ3YVK9B"
+    SYSTEMOWNER=1
     ;;
