@@ -5,4 +5,5 @@ nitropdf)
     downloadURL="https://downloads.gonitro.com/macos/Nitro%20PDF%20Pro_${appNewVersion}.dmg"    
     expectedTeamID="37C4TX3D45"
     blockingProcesses=( "Nitro PDF Pro" )
+    SYSTEMOWNER=1
     ;;
