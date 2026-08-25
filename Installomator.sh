@@ -352,7 +352,7 @@ if [[ $(/usr/bin/arch) == "arm64" ]]; then
     fi
 fi
 VERSION="10.10beta"
-VERSIONDATE="2026-07-13"
+VERSIONDATE="2026-08-25"
 
 # MARK: Functions
 
@@ -1561,6 +1561,7 @@ affinitydesigner2)
     downloadURL=$(curl -fs "https://store.serif.com/en-gb/update/macos/designer/2/" | grep -i -o -E "https.*\.dmg.*\"" | sort | tail -n1 | sed 's/.$//' | sed 's/&amp;/\&/g')
     appNewVersion=$(curl -fs "https://store.serif.com/en-gb/update/macos/designer/2/" | grep -i -o -E "https.*\.dmg" | sort | tail -n1 | tr "-" "\n" | grep dmg | sed -E 's/([0-9.]*)\.dmg/\1/g')
     expectedTeamID="6LVTQB9699"
+    SYSTEMOWNER=1
     ;;
 affinityphoto2)
     name="Affinity Photo 2"
@@ -1568,6 +1569,7 @@ affinityphoto2)
     downloadURL=$(curl -fs "https://store.serif.com/en-gb/update/macos/photo/2/" | grep -i -o -E "https.*\.dmg.*\"" | sort | tail -n1 | sed 's/.$//' | sed 's/&amp;/\&/g')
     appNewVersion=$(curl -fs "https://store.serif.com/en-gb/update/macos/photo/2/" | grep -i -o -E "https.*\.dmg" | sort | tail -n1 | tr "-" "\n" | grep dmg | sed -E 's/([0-9.]*)\.dmg/\1/g')
     expectedTeamID="6LVTQB9699"
+    SYSTEMOWNER=1
     ;;
 affinitypublisher2)
     name="Affinity Publisher 2"
@@ -1575,6 +1577,7 @@ affinitypublisher2)
     downloadURL=$(curl -fs "https://store.serif.com/en-gb/update/macos/publisher/2/" | grep -i -o -E "https.*\.dmg.*\"" | sort | tail -n1 | sed 's/.$//' | sed 's/&amp;/\&/g')
     appNewVersion=$(curl -fs "https://store.serif.com/en-gb/update/macos/publisher/2/" | grep -i -o -E "https.*\.dmg" | sort | tail -n1 | tr "-" "\n" | grep dmg | sed -E 's/([0-9.]*)\.dmg/\1/g')
     expectedTeamID="6LVTQB9699"
+    SYSTEMOWNER=1
     ;;
 bbedit)
     name="BBEdit"
@@ -1582,6 +1585,7 @@ bbedit)
     downloadURL=$(curl -s https://versioncheck.barebones.com/BBEdit.xml | grep dmg | sort | tail -n1 | cut -d">" -f2 | cut -d"<" -f1)
     appNewVersion=$(curl -s https://versioncheck.barebones.com/BBEdit.xml | grep dmg | sort  | tail -n1 | sed -E 's/.*BBEdit_([0-9 .]*)\.dmg.*/\1/')
     expectedTeamID="W52GZAXT98"
+    SYSTEMOWNER=1
     ;;
 citrixworkspace)
     name="Citrix Workspace"
@@ -1684,6 +1688,7 @@ nitropdf)
     downloadURL="https://downloads.gonitro.com/macos/Nitro%20PDF%20Pro_${appNewVersion}.dmg"    
     expectedTeamID="37C4TX3D45"
     blockingProcesses=( "Nitro PDF Pro" )
+    SYSTEMOWNER=1
     ;;
 polleverywhere)
     name="Poll Everywhere"
@@ -1692,6 +1697,7 @@ polleverywhere)
     downloadURL="https://polleverywhere-app.s3.amazonaws.com/mac-stable/$appNewVersion/pollev.dmg"
     expectedTeamID="W48F3X5M8W"
     versionKey="CFBundleVersion"
+    SYSTEMOWNER=1
     ;;
 supportapp)
     name="Support"
@@ -1708,6 +1714,8 @@ teamviewerqs)
     downloadURL="https://download.teamviewer.com/download/TeamViewerQS.dmg"
     appNewVersion=$(getJSONValue "$(curl -fsL https://www.teamviewer.com/en/solutions/use-cases/quicksupport/ | grep .dmg |  grep -o 'data-json="[^"]*"' | sed 's/data-json="//;s/"$//' | sed 's/&quot;/"/g' )" "data[0].versionNumber")
     expectedTeamID="H7UGFBUGV6"
+    targetDir="/Applications/Utilities"
+    SYSTEMOWNER=1
     ;;
 vlc)
     # VLC is a versatile, open-source multimedia player that supports a wide range of audio, video, and streaming formats across multiple platforms
@@ -1716,6 +1724,7 @@ vlc)
     appNewVersion=$(curl -s https://www.videolan.org/vlc/#download | xmllint --html --xpath "//script[contains(text(),'var PLATFORMS')]" - 2>/dev/null | grep -o '"osx":{"name":"macOS[^}]*' | grep -o '"latestVersion":"[^"]*' | sed 's/"latestVersion":"//')
     downloadURL="https://get.videolan.org/vlc/$appNewVersion/macosx/vlc-$appNewVersion-universal.dmg"
     expectedTeamID="75GAHG3SZQ"
+    SYSTEMOWNER=1
     ;;
 xquartz)
     # credit: AP Orlebeke (@apizz)
